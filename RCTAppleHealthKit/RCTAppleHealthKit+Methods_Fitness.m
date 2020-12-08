@@ -20,6 +20,7 @@
 - (void)fitness_getStepCountOnDay:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     NSDate *date = [RCTAppleHealthKit dateFromOptions:input key:@"date" withDefault:[NSDate date]];
+    BOOL skipManual = [RCTAppleHealthKit boolFromOptions:input key:@"skipManual" withDefault:TRUE];
 
     if(date == nil) {
         callback(@[RCTMakeError(@"could not parse date from options.date", nil, nil)]);
@@ -32,6 +33,7 @@
     [self fetchSumOfSamplesOnDayForType:stepCountType
                                    unit:stepsUnit
                                     day:date
+                                    skipManual:skipManual
                              completion:^(double value, NSDate *startDate, NSDate *endDate, NSError *error) {
         if (!value) {
             callback(@[RCTJSErrorFromNSError(error)]);
@@ -191,9 +193,10 @@
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit meterUnit]];
     NSDate *date = [RCTAppleHealthKit dateFromOptions:input key:@"date" withDefault:[NSDate date]];
 
+    BOOL skipManual = [RCTAppleHealthKit boolFromOptions:input key:@"skipManual" withDefault:TRUE];
     HKQuantityType *quantityType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
 
-    [self fetchSumOfSamplesOnDayForType:quantityType unit:unit day:date completion:^(double distance, NSDate *startDate, NSDate *endDate, NSError *error) {
+    [self fetchSumOfSamplesOnDayForType:quantityType unit:unit day:date skipManual:skipManual completion:^(double distance, NSDate *startDate, NSDate *endDate, NSError *error) {
         if (!distance) {
             callback(@[RCTJSErrorFromNSError(error)]);
             return;
@@ -282,9 +285,10 @@
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit meterUnit]];
     NSDate *date = [RCTAppleHealthKit dateFromOptions:input key:@"date" withDefault:[NSDate date]];
 
+    BOOL skipManual = [RCTAppleHealthKit boolFromOptions:input key:@"skipManual" withDefault:TRUE];
     HKQuantityType *quantityType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceCycling];
 
-    [self fetchSumOfSamplesOnDayForType:quantityType unit:unit day:date completion:^(double distance, NSDate *startDate, NSDate *endDate, NSError *error) {
+    [self fetchSumOfSamplesOnDayForType:quantityType unit:unit day:date skipManual:skipManual completion:^(double distance, NSDate *startDate, NSDate *endDate, NSError *error) {
         if (!distance) {
             callback(@[RCTJSErrorFromNSError(error)]);
             return;
@@ -338,9 +342,10 @@
     HKUnit *unit = [HKUnit countUnit];
     NSDate *date = [RCTAppleHealthKit dateFromOptions:input key:@"date" withDefault:[NSDate date]];
 
+    BOOL skipManual = [RCTAppleHealthKit boolFromOptions:input key:@"skipManual" withDefault:TRUE];
     HKQuantityType *quantityType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierFlightsClimbed];
 
-    [self fetchSumOfSamplesOnDayForType:quantityType unit:unit day:date completion:^(double count, NSDate *startDate, NSDate *endDate, NSError *error) {
+    [self fetchSumOfSamplesOnDayForType:quantityType unit:unit day:date skipManual:skipManual completion:^(double count, NSDate *startDate, NSDate *endDate, NSError *error) {
         if (!count) {
             callback(@[RCTJSErrorFromNSError(error)]);
             return;

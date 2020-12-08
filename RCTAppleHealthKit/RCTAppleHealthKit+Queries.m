@@ -431,6 +431,7 @@
 - (void)fetchSumOfSamplesOnDayForType:(HKQuantityType *)quantityType
                                  unit:(HKUnit *)unit
                                   day:(NSDate *)day
+                                  skipManual:(BOOL)skipManual
                            completion:(void (^)(double, NSDate *, NSDate *, NSError *))completionHandler {
 
     NSPredicate *predicate = [RCTAppleHealthKit predicateForSamplesOnDay:day];
